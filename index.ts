@@ -22,7 +22,7 @@ async function createCertificatePfx() {
 
 async function signFile(fileName: string) {
     const signtool = 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
-    const timestampUrl = 'http://sha256timestamp.ws.symantec.com/sha256/timestamp';
+    const timestampUrl = 'http://timestamp.digicert.com';
 
     try {
         const { stdout } = await asyncExec(`"${signtool}" sign /f certificate.pfx /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);

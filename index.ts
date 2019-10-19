@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import { promises as fs } from 'fs';
+import { exec } from 'child_process';
 
 async function createCertificatePfx() {
     const base64Certificate = core.getInput('certificate');
@@ -8,8 +9,17 @@ async function createCertificatePfx() {
     await fs.writeFile('./certificate.pfx', certificate);
 }
 
-async function signFile(file: string) {
-    console.log(file);
+function signFile(fileName: string) {
+    console.log(`Signing ${fileName}.`);
+
+    const signtool = 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
+    const timestampUrl = 'http://sha256timestamp.ws.symantec.com/sha256/timestamp';
+    exec(`"${signtool}" sign /f certificate.pfx /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`, (error, stdout) => {
+        if (error)
+            throw error;
+
+        console.log(stdout);
+    });
 }
 
 async function signFiles() {
@@ -17,7 +27,7 @@ async function signFiles() {
     const files = await fs.readdir(folder);
     for (let file of files) {
         if (file.endsWith('.dll'))
-            await signFile(`${folder}/file`);
+            signFile(`${folder}/${file}`);
     }
 }
 

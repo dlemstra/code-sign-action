@@ -50,6 +50,13 @@ module.exports = require("os");
 
 /***/ }),
 
+/***/ 129:
+/***/ (function(module) {
+
+module.exports = require("child_process");
+
+/***/ }),
+
 /***/ 431:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -340,21 +347,29 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const fs_1 = __webpack_require__(747);
+const child_process_1 = __webpack_require__(129);
 async function createCertificatePfx() {
     const base64Certificate = core.getInput('certificate');
     const certificate = Buffer.from(base64Certificate, 'base64');
     console.log(`Writing ${certificate.length} bytes to certificate.pfx.`);
     await fs_1.promises.writeFile('./certificate.pfx', certificate);
 }
-async function signFile(file) {
-    console.log(file);
+function signFile(fileName) {
+    console.log(`Signing ${fileName}.`);
+    const signtool = 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
+    const timestampUrl = 'http://sha256timestamp.ws.symantec.com/sha256/timestamp';
+    child_process_1.exec(`"${signtool}" sign /f certificate.pfx /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`, (error, stdout) => {
+        if (error)
+            throw error;
+        console.log(stdout);
+    });
 }
 async function signFiles() {
     const folder = core.getInput('folder');
     const files = await fs_1.promises.readdir(folder);
     for (let file of files) {
         if (file.endsWith('.dll'))
-            await signFile(file);
+            signFile(`${folder}/${file}`);
     }
 }
 async function run() {

@@ -6,6 +6,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Copy library
+        shell: cmd
+        run: |
+          mkdir files
+          copy C:\Windows\System32\wmi.dll files
       - name: Run the action
         uses: ./
         with:

@@ -1,0 +1,28 @@
+{
+  "name": "code-sign-action",
+  "version": "1.0.0",
+  "description": "Sign libraries with a code signing certificate.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && ncc build lib/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dlemstra/code-sign-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dlemstra/code-sign-action/issues"
+  },
+  "homepage": "https://github.com/dlemstra/code-sign-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.11.1",
+    "@zeit/ncc": "^0.20.5",
+    "typescript": "^3.6.4"
+  }
+}

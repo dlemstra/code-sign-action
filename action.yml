@@ -1,0 +1,9 @@
+name: 'Code Sign'
+description: 'Sign libraries with a code signing certificate.'
+inputs:
+  certificate:
+    description: 'The variable that contains the base64 encoded certificate.'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

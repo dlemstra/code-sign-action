@@ -15,3 +15,4 @@ jobs:
         uses: ./
         with:
           certificate: '${{ secrets.CERTIFICATE }}'
+          folder: 'files'

@@ -340,12 +340,27 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const fs_1 = __webpack_require__(747);
+async function createCertificatePfx() {
+    const base64Certificate = core.getInput('certificate');
+    const certificate = Buffer.from(base64Certificate, 'base64');
+    console.log(`Writing ${certificate.length} bytes to certificate.pfx.`);
+    await fs_1.promises.writeFile('./certificate.pfx', certificate);
+}
+async function signFile(file) {
+    console.log(file);
+}
+async function signFiles() {
+    const folder = core.getInput('folder');
+    const files = await fs_1.promises.readdir(folder);
+    for (let file of files) {
+        if (file.endsWith('.dll'))
+            await signFile(file);
+    }
+}
 async function run() {
     try {
-        const base64Certificate = core.getInput('certificate');
-        const certificate = Buffer.from(base64Certificate, 'base64');
-        console.log(`Writing ${certificate.length} bytes to certificate.pfx.`);
-        await fs_1.promises.writeFile('./certificate.pfx', certificate);
+        await createCertificatePfx();
+        await signFiles();
     }
     catch (err) {
         core.setFailed(`Action failed with error ${err}`);

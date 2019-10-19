@@ -4,6 +4,9 @@ inputs:
   certificate:
     description: 'The variable that contains the base64 encoded certificate.'
     required: true
+  folder:
+    description: 'The folder that contains the libraries to sign.'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

@@ -361,6 +361,8 @@ function sleep(seconds) {
 async function createCertificatePfx() {
     const base64Certificate = core.getInput('certificate');
     const certificate = Buffer.from(base64Certificate, 'base64');
+    if (certificate.length == 0)
+        throw 'certificate value is not set.';
     console.log(`Writing ${certificate.length} bytes to certificate.pfx.`);
     await fs_1.promises.writeFile('./certificate.pfx', certificate);
 }

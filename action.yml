@@ -2,7 +2,7 @@ name: 'Code Sign'
 description: 'Sign libraries with a code signing certificate.'
 inputs:
   certificate:
-    description: 'The variable that contains the base64 encoded certificate.'
+    description: 'The base64 encoded certificate.'
     required: true
   folder:
     description: 'The folder that contains the libraries to sign.'

@@ -344,32 +344,55 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const fs_1 = __webpack_require__(747);
+const util_1 = __importDefault(__webpack_require__(669));
 const child_process_1 = __webpack_require__(129);
+const asyncExec = util_1.default.promisify(child_process_1.exec);
+function sleep(seconds) {
+    if (seconds > 0)
+        console.log(`Waiting for ${seconds} seconds.`);
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+}
 async function createCertificatePfx() {
     const base64Certificate = core.getInput('certificate');
     const certificate = Buffer.from(base64Certificate, 'base64');
     console.log(`Writing ${certificate.length} bytes to certificate.pfx.`);
     await fs_1.promises.writeFile('./certificate.pfx', certificate);
 }
-function signFile(fileName) {
-    console.log(`Signing ${fileName}.`);
+async function signFile(fileName) {
     const signtool = 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
     const timestampUrl = 'http://sha256timestamp.ws.symantec.com/sha256/timestamp';
-    child_process_1.exec(`"${signtool}" sign /f certificate.pfx /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`, (error, stdout) => {
-        if (error)
-            throw error;
+    try {
+        const { stdout } = await asyncExec(`"${signtool}" sign /f certificate.pfx /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
         console.log(stdout);
-    });
+        return true;
+    }
+    catch (err) {
+        console.log(err.stderr);
+        return false;
+    }
+}
+async function trySignFile(fileName) {
+    console.log(`Signing ${fileName}.`);
+    for (let i = 0; i < 10; i++) {
+        await sleep(i);
+        if (await signFile(fileName))
+            return;
+    }
+    throw `failed to sign '${fileName}'`;
 }
 async function signFiles() {
     const folder = core.getInput('folder');
     const files = await fs_1.promises.readdir(folder);
     for (let file of files) {
-        if (file.endsWith('.dll'))
-            signFile(`${folder}/${file}`);
+        if (file.endsWith('.dll')) {
+            await trySignFile(`${folder}/${file}`);
+        }
     }
 }
 async function run() {
@@ -378,7 +401,7 @@ async function run() {
         await signFiles();
     }
     catch (err) {
-        core.setFailed(`Action failed with error ${err}`);
+        core.setFailed(`Action failed with error: ${err}`);
     }
 }
 run();
@@ -390,6 +413,13 @@ run();
 /***/ (function(module) {
 
 module.exports = require("path");
+
+/***/ }),
+
+/***/ 669:
+/***/ (function(module) {
+
+module.exports = require("util");
 
 /***/ }),
 

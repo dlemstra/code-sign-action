@@ -5,7 +5,7 @@ import { exec } from 'child_process';
 import { env } from 'process';
 
 const asyncExec = util.promisify(exec);
-const certificateFileName = env['TEMP'] + '/certificate.pfx';
+const certificateFileName = env['TEMP'] + '\\certificate.pfx';
 
 function sleep(seconds: number) {
     if (seconds > 0)

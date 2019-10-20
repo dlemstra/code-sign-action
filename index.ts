@@ -2,8 +2,10 @@ import * as core from '@actions/core';
 import { promises as fs } from 'fs';
 import util from 'util';
 import { exec } from 'child_process';
+import { env } from 'process';
 
 const asyncExec = util.promisify(exec);
+const certificateFileName = env['TEMP'] + '/certificate.pfx';
 
 function sleep(seconds: number) {
     if (seconds > 0)
@@ -16,8 +18,8 @@ async function createCertificatePfx() {
     const certificate = Buffer.from(base64Certificate, 'base64');
     if (certificate.length == 0)
         throw 'certificate value is not set.';
-    console.log(`Writing ${certificate.length} bytes to certificate.pfx.`);
-    await fs.writeFile('./certificate.pfx', certificate);
+    console.log(`Writing ${certificate.length} bytes to ${certificateFileName}.`);
+    await fs.writeFile(certificateFileName, certificate);
 }
 
 async function signFile(fileName: string) {
@@ -25,7 +27,7 @@ async function signFile(fileName: string) {
     const timestampUrl = 'http://timestamp.digicert.com';
 
     try {
-        const { stdout } = await asyncExec(`"${signtool}" sign /f certificate.pfx /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
+        const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
         console.log(stdout);
         return true;
     } catch(err) {

@@ -1,5 +1,5 @@
-name: 'Code Sign'
-description: 'Sign libraries with a code signing certificate.'
+name: 'Code sign a DLL'
+description: 'Sign a DLL with a code signing certificate.'
 inputs:
   certificate:
     description: 'The base64 encoded certificate.'

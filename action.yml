@@ -1,7 +1,7 @@
 name: 'Code sign a DLL'
 description: 'Sign a DLL with a code signing certificate.'
 branding:
-  icon: 'pen-tool'
+  icon: 'award'
   color: 'green'
 inputs:
   certificate:

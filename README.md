@@ -1,4 +1,4 @@
-# Code sign action
+# Code sign a DLL
 
 This action signs libraries with a code signing certificate. This action only works on Windows and that means it should run on `windows-latest`.
 
@@ -12,6 +12,10 @@ This action signs libraries with a code signing certificate. This action only wo
 
 **Required** The folder that contains the libraries to sign.
 
+### `recursive`
+
+**Optional** Recursively search for DLL files.
+
 ## Example usage
 
 ```
@@ -21,4 +25,5 @@ steps:
   with:
     certificate: '${{ secrets.CERTIFICATE }}'
     folder: 'files'
+    recursive: true
 ```

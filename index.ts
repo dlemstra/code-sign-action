@@ -14,7 +14,7 @@ function sleep(seconds: number) {
 }
 
 async function createCertificatePfx() {
-    const base64Certificate = core.getInput('certificate');
+    const base64Certificate = core.getInput('certificate', { required: true });
     const certificate = Buffer.from(base64Certificate, 'base64');
     if (certificate.length == 0)
         throw 'certificate value is not set.';
@@ -46,13 +46,25 @@ async function trySignFile(fileName: string) {
     throw `failed to sign '${fileName}'`;
 }
 
-async function signFiles() {
-    const folder = core.getInput('folder');
+async function* getFiles(folder: string, recursive: boolean): any {
     const files = await fs.readdir(folder);
-    for (let file of files) {
-        if (file.endsWith('.dll')) {
-            await trySignFile(`${folder}/${file}`);
+    for (const file of files) {
+        const fullPath = `${folder}/${file}`;
+        const stat = await fs.stat(fullPath);
+        if (stat.isFile() && file.endsWith('.dll')) {
+            yield fullPath;
         }
+        if (stat.isDirectory() && recursive) {
+            yield* getFiles(fullPath, recursive);
+        }
+    }
+}
+
+async function signFiles() {
+    const folder = core.getInput('folder', { required: true });
+    const recursive = core.getInput('recursive') == 'true';
+    for await (const file of getFiles(folder, recursive)) {
+        await trySignFile(file);
     }
 }
 

@@ -1,18 +1,23 @@
 on: push
 
+name: master
 jobs:
   run_action:
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Copy library
+      - name: Copy libraries
         shell: cmd
         run: |
           mkdir files
           copy C:\Windows\System32\wmi.dll files
+          cd files
+          mkdir subdirectory
+          copy C:\Windows\System32\wmi.dll subdirectory
       - name: Run the action
         uses: ./
         with:
           certificate: '${{ secrets.CERTIFICATE }}'
           folder: 'files'
+          recursive: true

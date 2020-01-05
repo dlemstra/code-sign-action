@@ -10,6 +10,9 @@ inputs:
   folder:
     description: 'The folder that contains the libraries to sign.'
     required: true
+  recursive:
+    description: 'Recursively search for DLL files.'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

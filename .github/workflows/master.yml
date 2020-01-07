@@ -10,7 +10,6 @@ jobs:
       - name: Copy libraries
         shell: cmd
         run: |
-          mkdir files
           copy C:\Windows\System32\wmi.dll files
           cd files
           mkdir subdirectory

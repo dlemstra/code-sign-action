@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>TestPackage</id>
+    <title>TestPackage</title>
+    <description>TestPackage</description>
+    <version>1.0.0</version>
+    <authors>Dirk Lemstra</authors>
+    <owners>Dirk Lemstra</owners>
+    <license type="expression">Apache-2.0</license>
+  </metadata>
+  <files>
+    <file src="empty.txt" />
+  </files>
+</package>

@@ -1,5 +1,5 @@
-name: 'Code sign a DLL'
-description: 'Sign a DLL with a code signing certificate.'
+name: 'Code sign a file'
+description: 'Sign a file with a code signing certificate.'
 branding:
   icon: 'award'
   color: 'green'
@@ -11,7 +11,7 @@ inputs:
     description: 'The folder that contains the libraries to sign.'
     required: true
   recursive:
-    description: 'Recursively search for DLL files.'
+    description: 'Recursively search for supported files.'
     required: false
 runs:
   using: 'node12'

@@ -20,12 +20,15 @@ function sleep(seconds: number) {
 }
 
 async function createCertificatePfx() {
-    const base64Certificate = core.getInput('certificate', { required: true });
+    const base64Certificate = core.getInput('certificate');
     const certificate = Buffer.from(base64Certificate, 'base64');
-    if (certificate.length == 0)
-        throw 'certificate value is not set.';
+    if (certificate.length == 0) {
+        console.log('certificate value is not set.');
+        return false;
+    }
     console.log(`Writing ${certificate.length} bytes to ${certificateFileName}.`);
     await fs.writeFile(certificateFileName, certificate);
+    return true;
 }
 
 async function downloadNuGet() {
@@ -114,8 +117,8 @@ async function signFiles() {
 
 async function run() {
     try {
-        await createCertificatePfx();
-        await signFiles();
+        if (await createCertificatePfx())
+            await signFiles();
     }
     catch (err) {
         core.setFailed(`Action failed with error: ${err}`);

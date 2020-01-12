@@ -23,7 +23,7 @@ async function createCertificatePfx() {
     const base64Certificate = core.getInput('certificate');
     const certificate = Buffer.from(base64Certificate, 'base64');
     if (certificate.length == 0) {
-        console.log('certificate value is not set.');
+        console.log('The value for "certificate" is not set.');
         return false;
     }
     console.log(`Writing ${certificate.length} bytes to ${certificateFileName}.`);
@@ -89,7 +89,7 @@ async function trySignFile(fileName: string) {
                 return;
         }
     }
-    throw `failed to sign '${fileName}'`;
+    throw `Failed to sign '${fileName}'.`;
 }
 
 async function* getFiles(folder: string, recursive: boolean): any {

@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import { promises as fs } from 'fs';
 import { existsSync, createWriteStream } from 'fs';
 import https from 'https';
+import * as path from 'path';
 import util from 'util';
 import { exec } from 'child_process';
 import { env } from 'process';
@@ -12,6 +13,13 @@ const nugetFileName = env['TEMP'] + '\\nuget.exe';
 
 const timestampUrl = 'http://timestamp.digicert.com';
 const signtool = 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
+
+const signtoolFileExtensions = [
+    '.dll', '.exe', '.sys', '.vxd',
+    '.msix', '.msixbundle', '.appx', '.appxbundle',
+    '.msi', '.msp', '.msm', '.cab',
+    '.ps1', '.psm1'
+];
 
 function sleep(seconds: number) {
     if (seconds > 0)
@@ -79,12 +87,13 @@ async function signNupkg(fileName: string) {
 
 async function trySignFile(fileName: string) {
     console.log(`Signing ${fileName}.`);
+    const extension = path.extname(fileName);
     for (let i=0; i< 10; i++) {
         await sleep(i);
-        if (fileName.endsWith('.dll')) {
+        if (signtoolFileExtensions.includes(extension)) {
             if (await signDll(fileName))
                 return;
-        } else if (fileName.endsWith('.nupkg')) {
+        } else if (extension == '.nupkg') {
             if (await signNupkg(fileName))
                 return;
         }
@@ -98,7 +107,8 @@ async function* getFiles(folder: string, recursive: boolean): any {
         const fullPath = `${folder}/${file}`;
         const stat = await fs.stat(fullPath);
         if (stat.isFile()) {
-            if (file.endsWith('.dll') || file.endsWith('.nupkg'))
+            const extension = path.extname(file);
+            if (signtoolFileExtensions.includes(extension) || extension == '.nupkg')
                 yield fullPath;
         }
         else if (stat.isDirectory() && recursive) {

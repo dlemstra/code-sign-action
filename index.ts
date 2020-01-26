@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import { promises as fs } from 'fs';
 import { existsSync, createWriteStream } from 'fs';
 import https from 'https';
-import * as path from 'path';
+import path from 'path';
 import util from 'util';
 import { exec } from 'child_process';
 import { env } from 'process';
@@ -16,9 +16,9 @@ const signtool = 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/si
 
 const signtoolFileExtensions = [
     '.dll', '.exe', '.sys', '.vxd',
-    '.msix', '.msixbundle', '.appx', '.appxbundle',
-    '.msi', '.msp', '.msm', '.cab',
-    '.ps1', '.psm1'
+    '.msix', '.msixbundle', '.appx',
+    '.appxbundle', '.msi', '.msp',
+    '.msm', '.cab', '.ps1', '.psm1'
 ];
 
 function sleep(seconds: number) {

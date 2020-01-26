@@ -8,7 +8,7 @@ inputs:
     description: 'The base64 encoded certificate.'
     required: true
   folder:
-    description: 'The folder that contains the libraries to sign.'
+    description: 'The folder that contains the files to sign.'
     required: true
   recursive:
     description: 'Recursively search for supported files.'

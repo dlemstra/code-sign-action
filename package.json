@@ -1,7 +1,7 @@
 {
   "name": "code-sign-action",
   "version": "1.0.0",
-  "description": "Sign libraries with a code signing certificate.",
+  "description": "Sign files with a code signing certificate.",
   "main": "index.js",
   "scripts": {
     "build": "tsc && ncc build lib/index.js -m"

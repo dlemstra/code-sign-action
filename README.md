@@ -1,6 +1,6 @@
 # Code sign a file
 
-This action signs `.dll` and `.nupkg` files with a code signing certificate. This action only works on Windows and that means it should run on `windows-latest`.
+This action signs `.nupkg` files and files that are supported by `signtool.exe` with a code signing certificate. This action only works on Windows and that means it should run on `windows-latest`.
 
 ## Inputs
 

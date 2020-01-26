@@ -59,7 +59,7 @@ async function downloadNuGet() {
     });
 }
 
-async function signDll(fileName: string) {
+async function signWithSigntool(fileName: string) {
     try {
         const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
         console.log(stdout);
@@ -91,7 +91,7 @@ async function trySignFile(fileName: string) {
     for (let i=0; i< 10; i++) {
         await sleep(i);
         if (signtoolFileExtensions.includes(extension)) {
-            if (await signDll(fileName))
+            if (await signWithSigntool(fileName))
                 return;
         } else if (extension == '.nupkg') {
             if (await signNupkg(fileName))

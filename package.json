@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/dlemstra/code-sign-action#readme",
   "dependencies": {
-    "@actions/core": "^1.2.0"
+    "@actions/core": "^1.2.6"
   },
   "devDependencies": {
     "@types/node": "^12.11.1",

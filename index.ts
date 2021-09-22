@@ -40,7 +40,7 @@ async function createCertificatePfx() {
 }
 
 async function downloadNuGet() {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
         if (existsSync(nugetFileName)) {
             resolve();
             return;

@@ -21,6 +21,19 @@ const signtoolFileExtensions = [
     '.msm', '.cab', '.ps1', '.psm1'
 ];
 
+interface IExecException
+{
+    stdout: string
+    stderr: string
+}
+
+function isExecException(err: unknown): err is IExecException  {
+    return (err as IExecException).stdout !== undefined && 
+        typeof (err as IExecException).stdout === 'string' &&
+        (err as IExecException).stderr !== undefined && 
+        typeof (err as IExecException).stderr === 'string';
+}
+
 function sleep(seconds: number) {
     if (seconds > 0)
         console.log(`Waiting for ${seconds} seconds.`);
@@ -64,9 +77,11 @@ async function signWithSigntool(fileName: string) {
         const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
         console.log(stdout);
         return true;
-    } catch(err: any) {
-        console.log(err.stdout);
-        console.log(err.stderr);
+    } catch(err: unknown) {
+        if (isExecException(err)) {
+            console.log(err.stdout);
+            console.log(err.stderr);
+        }
         return false;
     }
 }
@@ -78,9 +93,11 @@ async function signNupkg(fileName: string) {
         const { stdout } = await asyncExec(`"${nugetFileName}" sign ${fileName} -CertificatePath ${certificateFileName} -Timestamper ${timestampUrl}`);
         console.log(stdout);
         return true;
-    } catch(err: any) {
-        console.log(err.stdout);
-        console.log(err.stderr);
+    } catch(err: unknown){
+        if (isExecException(err)) {
+            console.log(err.stdout);
+            console.log(err.stderr);
+        }
         return false;
     }
 }
@@ -101,7 +118,7 @@ async function trySignFile(fileName: string) {
     throw `Failed to sign '${fileName}'.`;
 }
 
-async function* getFiles(folder: string, recursive: boolean): any {
+async function* getFiles(folder: string, recursive: boolean): AsyncGenerator<string> {
     const files = await fs.readdir(folder);
     for (const file of files) {
         const fullPath = `${folder}/${file}`;

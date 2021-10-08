@@ -14,7 +14,7 @@ This action signs `.nupkg` files and files that are supported by `signtool.exe` 
 
 ### `recursive`
 
-**Optional** Recursively search for DLL files.
+**Optional** Recursively search for supported files.
 
 ## Example usage
 

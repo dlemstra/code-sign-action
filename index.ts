@@ -64,7 +64,7 @@ async function signWithSigntool(fileName: string) {
         const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
         console.log(stdout);
         return true;
-    } catch(err) {
+    } catch(err: any) {
         console.log(err.stdout);
         console.log(err.stderr);
         return false;
@@ -78,7 +78,7 @@ async function signNupkg(fileName: string) {
         const { stdout } = await asyncExec(`"${nugetFileName}" sign ${fileName} -CertificatePath ${certificateFileName} -Timestamper ${timestampUrl}`);
         console.log(stdout);
         return true;
-    } catch(err) {
+    } catch(err: any) {
         console.log(err.stdout);
         console.log(err.stderr);
         return false;

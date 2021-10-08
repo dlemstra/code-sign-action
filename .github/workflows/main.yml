@@ -1,6 +1,6 @@
 on: push
 
-name: master
+name: main
 jobs:
   run_action:
     runs-on: windows-latest

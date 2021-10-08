@@ -10,7 +10,7 @@ This action signs `.nupkg` files and files that are supported by `signtool.exe` 
 
 ### `folder`
 
-**Required** The folder that contains the libraries to sign.
+**Required** The folder that contains the files to sign.
 
 ### `recursive`
 

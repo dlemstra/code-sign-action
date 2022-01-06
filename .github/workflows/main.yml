@@ -8,10 +8,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Use node 12
+      - name: Use node 14
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
 
       - run: npm install
 
@@ -20,7 +20,6 @@ jobs:
       - name: Copy libraries
         shell: cmd
         run: |
-          dir "C:/Program Files (x86)/Windows Kits/10/bin/"
           copy C:\Windows\System32\wmi.dll files
           cd files
           mkdir subdirectory

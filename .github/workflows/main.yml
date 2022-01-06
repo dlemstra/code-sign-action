@@ -3,7 +3,7 @@ on: push
 name: main
 jobs:
   run_action:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Checkout
         uses: actions/checkout@v1

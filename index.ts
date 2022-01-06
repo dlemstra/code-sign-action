@@ -136,16 +136,24 @@ async function* getFiles(folder: string, recursive: boolean): AsyncGenerator<str
 async function getSigntoolLocation() {
     const windowsKitsfolder = 'C:/Program Files (x86)/Windows Kits/10/bin/';
     const folders = await fs.readdir(windowsKitsfolder);
-    let fileName = '';
+    let fileName = 'unable to find signtool.exe';
     let maxVersion = 0;
     for (const folder of folders) {
         if (!folder.endsWith('.0')) {
             continue;
         }
-        const folderVersion = parseInt(folder.replace('.',''));
+        const folderVersion = parseInt(folder.replace(/\./g,''));
         if (folderVersion > maxVersion) {
-            fileName = `${windowsKitsfolder}/${folder}/x86/signtool.exe`
-            maxVersion = folderVersion;
+            const signtoolFilename = `${windowsKitsfolder}${folder}/x86/signtool.exe`;
+            try {
+                const stat = await fs.stat(signtoolFilename);
+                if (stat.isFile()) {
+                    fileName = signtoolFilename
+                    maxVersion = folderVersion;
+                }
+            }
+            catch {
+            }
         }
     }
 

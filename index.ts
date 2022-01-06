@@ -12,7 +12,6 @@ const certificateFileName = env['TEMP'] + '\\certificate.pfx';
 const nugetFileName = env['TEMP'] + '\\nuget.exe';
 
 const timestampUrl = 'http://timestamp.digicert.com';
-const signtool = 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
 
 const signtoolFileExtensions = [
     '.dll', '.exe', '.sys', '.vxd',
@@ -72,7 +71,7 @@ async function downloadNuGet() {
     });
 }
 
-async function signWithSigntool(fileName: string) {
+async function signWithSigntool(signtool: string, fileName: string) {
     try {
         const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
         console.log(stdout);
@@ -102,13 +101,13 @@ async function signNupkg(fileName: string) {
     }
 }
 
-async function trySignFile(fileName: string) {
+async function trySignFile(signtool: string, fileName: string) {
     console.log(`Signing ${fileName}.`);
     const extension = path.extname(fileName);
     for (let i=0; i< 10; i++) {
         await sleep(i);
         if (signtoolFileExtensions.includes(extension)) {
-            if (await signWithSigntool(fileName))
+            if (await signWithSigntool(signtool, fileName))
                 return;
         } else if (extension == '.nupkg') {
             if (await signNupkg(fileName))
@@ -134,11 +133,33 @@ async function* getFiles(folder: string, recursive: boolean): AsyncGenerator<str
     }
 }
 
+async function getSigntoolLocation() {
+    const windowsKitsfolder = 'C:/Program Files (x86)/Windows Kits/10/bin/';
+    const folders = await fs.readdir(windowsKitsfolder);
+    let fileName = '';
+    let maxVersion = 0;
+    for (const folder of folders) {
+        if (!folder.endsWith('.0')) {
+            continue;
+        }
+        const folderVersion = parseInt(folder.replace('.',''));
+        if (folderVersion > maxVersion) {
+            fileName = `${windowsKitsfolder}/${folder}/x86/signtool.exe`
+            maxVersion = folderVersion;
+        }
+    }
+
+    console.log(`Signtool location is ${fileName}.`);
+
+    return fileName;
+}
+
 async function signFiles() {
     const folder = core.getInput('folder', { required: true });
     const recursive = core.getInput('recursive') == 'true';
+    const signtool = await getSigntoolLocation()
     for await (const file of getFiles(folder, recursive)) {
-        await trySignFile(file);
+        await trySignFile(signtool, file);
     }
 }
 

@@ -45,7 +45,7 @@ async function createCertificatePfx() {
         console.log('The value for "certificate" is not set.');
         return null;
     }
-    const certificateFileName = env['TEMP'] + `\\code-sign-certificate-{Math.floor((Math.random() * 1000000))}.pfx`
+    const certificateFileName = env['TEMP'] + `\\code-sign-certificate-${Math.floor((Math.random() * 1000000))}.pfx`
     console.log(`Writing ${certificate.length} bytes to ${certificateFileName}.`);
     await fs.writeFile(certificateFileName, certificate);
     return certificateFileName;

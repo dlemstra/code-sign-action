@@ -8,7 +8,6 @@ import { exec } from 'child_process';
 import { env } from 'process';
 
 const asyncExec = util.promisify(exec);
-const certificateFileName = env['TEMP'] + '\\certificate.pfx';
 const nugetFileName = env['TEMP'] + '\\nuget.exe';
 
 const timestampUrl = 'http://timestamp.digicert.com';
@@ -44,11 +43,12 @@ async function createCertificatePfx() {
     const certificate = Buffer.from(base64Certificate, 'base64');
     if (certificate.length == 0) {
         console.log('The value for "certificate" is not set.');
-        return false;
+        return null;
     }
+    const certificateFileName = env['TEMP'] + `\\code-sign-certificate-{Math.floor((Math.random() * 1000000))}.pfx`
     console.log(`Writing ${certificate.length} bytes to ${certificateFileName}.`);
     await fs.writeFile(certificateFileName, certificate);
-    return true;
+    return certificateFileName;
 }
 
 async function downloadNuGet() {
@@ -71,7 +71,7 @@ async function downloadNuGet() {
     });
 }
 
-async function signWithSigntool(signtool: string, fileName: string) {
+async function signWithSigntool(signtool: string, certificateFileName: string, fileName: string) {
     try {
         const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
         console.log(stdout);
@@ -85,7 +85,7 @@ async function signWithSigntool(signtool: string, fileName: string) {
     }
 }
 
-async function signNupkg(fileName: string) {
+async function signNupkg(certificateFileName: string, fileName: string) {
     await downloadNuGet();
 
     try {
@@ -101,16 +101,16 @@ async function signNupkg(fileName: string) {
     }
 }
 
-async function trySignFile(signtool: string, fileName: string) {
+async function trySignFile(signtool: string, certificateFileName: string, fileName: string) {
     console.log(`Signing ${fileName}.`);
     const extension = path.extname(fileName);
     for (let i=0; i< 10; i++) {
         await sleep(i);
         if (signtoolFileExtensions.includes(extension)) {
-            if (await signWithSigntool(signtool, fileName))
+            if (await signWithSigntool(signtool, certificateFileName, fileName))
                 return;
         } else if (extension == '.nupkg') {
-            if (await signNupkg(fileName))
+            if (await signNupkg(certificateFileName, fileName))
                 return;
         }
     }
@@ -162,19 +162,20 @@ async function getSigntoolLocation() {
     return fileName;
 }
 
-async function signFiles() {
+async function signFiles(certificateFileName: string) {
     const folder = core.getInput('folder', { required: true });
     const recursive = core.getInput('recursive') == 'true';
     const signtool = await getSigntoolLocation()
     for await (const file of getFiles(folder, recursive)) {
-        await trySignFile(signtool, file);
+        await trySignFile(signtool, certificateFileName, file);
     }
 }
 
 async function run() {
     try {
-        if (await createCertificatePfx())
-            await signFiles();
+        const certificateFileName = await createCertificatePfx();
+        if (certificateFileName !== null)
+            await signFiles(certificateFileName);
     }
     catch (err) {
         core.setFailed(`Action failed with error: ${err}`);

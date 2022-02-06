@@ -51,6 +51,13 @@ async function createCertificatePfx() {
     return certificateFileName;
 }
 
+async function removeCertificatePfx(certificateFileName: string | null) {
+    if (certificateFileName === null)
+        return;
+    console.log(`Removing ${certificateFileName}.`);
+    await fs.unlink(certificateFileName);
+}
+
 async function downloadNuGet() {
     return new Promise<void>(resolve => {
         if (existsSync(nugetFileName)) {
@@ -172,12 +179,15 @@ async function signFiles(certificateFileName: string) {
 }
 
 async function run() {
+    let certificateFileName = null;
     try {
-        const certificateFileName = await createCertificatePfx();
+        certificateFileName = await createCertificatePfx();
         if (certificateFileName !== null)
             await signFiles(certificateFileName);
+        await removeCertificatePfx(certificateFileName);
     }
     catch (err) {
+        await removeCertificatePfx(certificateFileName);
         core.setFailed(`Action failed with error: ${err}`);
     }
 }

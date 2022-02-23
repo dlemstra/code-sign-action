@@ -80,7 +80,7 @@ async function downloadNuGet() {
 
 async function signWithSigntool(signtool: string, certificateFileName: string, fileName: string) {
     try {
-        const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 ${fileName}`);
+        const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 "${fileName}"`);
         console.log(stdout);
         return true;
     } catch(err: unknown) {
@@ -96,7 +96,7 @@ async function signNupkg(certificateFileName: string, fileName: string) {
     await downloadNuGet();
 
     try {
-        const { stdout } = await asyncExec(`"${nugetFileName}" sign ${fileName} -CertificatePath ${certificateFileName} -Timestamper ${timestampUrl}`);
+        const { stdout } = await asyncExec(`"${nugetFileName}" sign "${fileName}" -CertificatePath ${certificateFileName} -Timestamper ${timestampUrl}`);
         console.log(stdout);
         return true;
     } catch(err: unknown){
@@ -109,7 +109,7 @@ async function signNupkg(certificateFileName: string, fileName: string) {
 }
 
 async function trySignFile(signtool: string, certificateFileName: string, fileName: string) {
-    console.log(`Signing ${fileName}.`);
+    console.log(`Signing: ${fileName}.`);
     const extension = path.extname(fileName);
     for (let i=0; i< 10; i++) {
         await sleep(i);

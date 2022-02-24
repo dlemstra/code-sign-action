@@ -30,7 +30,7 @@ vaCuBEErpQ9BjQICB9A=
 
 You must remove the BEGIN CERTIFICATE and END CERTIFICATE lines before saving your secret.
 
-You may find this page by clicking on `Settings > Secrets > Actions` on your current repo.
+You may find the secrets page by navigating to `Settings > Secrets > Actions` on your current repo.
 
 ### `folder`
 

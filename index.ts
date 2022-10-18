@@ -26,9 +26,9 @@ interface IExecException
 }
 
 function isExecException(err: unknown): err is IExecException  {
-    return (err as IExecException).stdout !== undefined && 
+    return (err as IExecException).stdout !== undefined &&
         typeof (err as IExecException).stdout === 'string' &&
-        (err as IExecException).stderr !== undefined && 
+        (err as IExecException).stderr !== undefined &&
         typeof (err as IExecException).stderr === 'string';
 }
 
@@ -78,9 +78,9 @@ async function downloadNuGet() {
     });
 }
 
-async function signWithSigntool(signtool: string, certificateFileName: string, fileName: string) {
+async function signWithSigntool(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string) {
     try {
-        const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /tr ${timestampUrl} /td sha256 /fd sha256 "${fileName}"`);
+        const { stdout } = await asyncExec(`"${signtool}" sign /f ${certificateFileName} /p "${certificatePassword}" /tr ${timestampUrl} /td sha256 /fd sha256 "${fileName}"`);
         console.log(stdout);
         return true;
     } catch(err: unknown) {
@@ -108,13 +108,13 @@ async function signNupkg(certificateFileName: string, fileName: string) {
     }
 }
 
-async function trySignFile(signtool: string, certificateFileName: string, fileName: string) {
+async function trySignFile(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string) {
     console.log(`Signing: ${fileName}.`);
     const extension = path.extname(fileName);
     for (let i=0; i< 10; i++) {
         await sleep(i);
         if (signtoolFileExtensions.includes(extension)) {
-            if (await signWithSigntool(signtool, certificateFileName, fileName))
+            if (await signWithSigntool(signtool, certificateFileName, certificatePassword, fileName))
                 return;
         } else if (extension == '.nupkg') {
             if (await signNupkg(certificateFileName, fileName))
@@ -169,21 +169,22 @@ async function getSigntoolLocation() {
     return fileName;
 }
 
-async function signFiles(certificateFileName: string) {
+async function signFiles(certificateFileName: string, certificatePassword: string) {
     const folder = core.getInput('folder', { required: true });
     const recursive = core.getInput('recursive') == 'true';
     const signtool = await getSigntoolLocation()
     for await (const file of getFiles(folder, recursive)) {
-        await trySignFile(signtool, certificateFileName, file);
+        await trySignFile(signtool, certificateFileName, certificatePassword, file);
     }
 }
 
 async function run() {
+    const certificatePassword = core.getInput('password');
     let certificateFileName = null;
     try {
         certificateFileName = await createCertificatePfx();
         if (certificateFileName !== null)
-            await signFiles(certificateFileName);
+            await signFiles(certificateFileName, certificatePassword);
         await removeCertificatePfx(certificateFileName);
     }
     catch (err) {

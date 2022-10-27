@@ -8,10 +8,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Use node 14
+      - name: Use node 16
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       - run: npm install
 

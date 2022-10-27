@@ -31,6 +31,14 @@ jobs:
           certificate: '${{ secrets.MISSING_CERTIFICATE }}'
           folder: 'files'
 
+      - name: Run the action with password
+        uses: ./
+        with:
+          certificate: '${{ secrets.CERTIFICATE_WITH_PASSWORD }}'
+          password: '${{ secrets.CERTIFICATE_PASSWORD }}'
+          folder: 'files'
+          recursive: true
+
       - name: Run the action
         uses: ./
         with:

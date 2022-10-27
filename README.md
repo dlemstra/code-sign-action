@@ -32,6 +32,10 @@ You must remove the BEGIN CERTIFICATE and END CERTIFICATE lines before saving yo
 
 You may find the secrets page by navigating to `Settings > Secrets > Actions` on your current repo.
 
+### `password`
+
+**Optional** The password to use when opening the PFX file.
+
 ### `folder`
 
 **Required** The folder that contains the files to sign.
@@ -48,6 +52,7 @@ steps:
   uses: dlemstra/code-sign-action@v1
   with:
     certificate: '${{ secrets.CERTIFICATE }}'
+    password: '${{ secrets.CERTIFICATE_PATH }}'
     folder: 'files'
     recursive: true
 ```

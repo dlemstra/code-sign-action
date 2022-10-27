@@ -37,7 +37,11 @@ jobs:
           certificate: '${{ secrets.CERTIFICATE_WITH_PASSWORD }}'
           password: '${{ secrets.CERTIFICATE_PASSWORD }}'
           folder: 'files'
-          recursive: true
+
+      - name: Copy libraries
+        shell: cmd
+        run: |
+          copy /Y C:\Windows\System32\wmi.dll files
 
       - name: Run the action
         uses: ./

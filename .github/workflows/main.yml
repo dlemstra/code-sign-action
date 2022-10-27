@@ -42,6 +42,7 @@ jobs:
         shell: cmd
         run: |
           copy /Y C:\Windows\System32\wmi.dll files
+          git checkout TestPackage.1.0.0.nupkg
 
       - name: Run the action
         uses: ./

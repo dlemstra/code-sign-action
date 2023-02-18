@@ -47,6 +47,6 @@ jobs:
       - name: Run the action
         uses: ./
         with:
-          certificate: '${{ secrets.CERTIFICATE }}'
+          certificate: '${{ secrets.CERTIFICATE_WITHOUT_PASSWORD }}'
           folder: 'files'
           recursive: true

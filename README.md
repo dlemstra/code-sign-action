@@ -52,7 +52,7 @@ steps:
   uses: dlemstra/code-sign-action@v1
   with:
     certificate: '${{ secrets.CERTIFICATE }}'
-    password: '${{ secrets.CERTIFICATE_PATH }}'
+    password: '${{ secrets.CERTIFICATE_PASSWORD }}'
     folder: 'files'
     recursive: true
 ```

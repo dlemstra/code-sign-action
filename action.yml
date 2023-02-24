@@ -12,9 +12,12 @@ inputs:
     required: false
   folder:
     description: 'The folder that contains the files to sign.'
-    required: true
+    required: false
   recursive:
-    description: 'Recursively search for supported files.'
+    description: 'Recursively search for supported files in the specified folder.'
+    required: false
+  files:
+    description: 'The paths to the files to sign.'
     required: false
 runs:
   using: 'node16'

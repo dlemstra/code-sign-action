@@ -50,3 +50,17 @@ jobs:
           certificate: '${{ secrets.CERTIFICATE_WITHOUT_PASSWORD }}'
           folder: 'files'
           recursive: true
+
+      - name: Copy libraries
+        shell: cmd
+        run: |
+          copy /Y C:\Windows\System32\wmi.dll files
+          git checkout files/TestPackage.1.0.0.nupkg
+
+      - name: Run the action
+        uses: ./
+        with:
+          certificate: '${{ secrets.CERTIFICATE_WITHOUT_PASSWORD }}'
+          files: |
+            files/wmi.dll
+            files/TestPackage.1.0.0.nupkg

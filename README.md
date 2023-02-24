@@ -38,11 +38,15 @@ You may find the secrets page by navigating to `Settings > Secrets > Actions` on
 
 ### `folder`
 
-**Required** The folder that contains the files to sign.
+**Optional** The folder that contains the files to sign.
 
 ### `recursive`
 
-**Optional** Recursively search for supported files.
+**Optional** Recursively search for supported files in the specified folder.
+
+### `files`
+
+**Optional** The paths to the files to sign.
 
 ## Example usage
 
@@ -55,4 +59,7 @@ steps:
     password: '${{ secrets.CERTIFICATE_PASSWORD }}'
     folder: 'files'
     recursive: true
+    files: |
+      file1
+      file2
 ```

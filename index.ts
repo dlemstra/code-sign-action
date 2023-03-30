@@ -39,12 +39,10 @@ function sleep(seconds: number) {
 }
 
 async function createCertificatePfx() {
-    const base64Certificate = core.getInput('certificate');
+    const base64Certificate = core.getInput('certificate', { required: true });
     const certificate = Buffer.from(base64Certificate, 'base64');
-    if (certificate.length == 0) {
-        console.log('The value for "certificate" is not set.');
-        return null;
-    }
+    if (certificate.length == 0)
+        throw 'certificate value is not set.';
     const certificateFileName = env['TEMP'] + `\\code-sign-certificate-${Math.floor((Math.random() * 1000000))}.pfx`
     console.log(`Writing ${certificate.length} bytes to ${certificateFileName}.`);
     await fs.writeFile(certificateFileName, certificate);

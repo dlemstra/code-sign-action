@@ -25,12 +25,6 @@ jobs:
           mkdir subdirectory
           copy C:\Windows\System32\wmi.dll subdirectory
 
-      - name: Run the action with missing certificate
-        uses: ./
-        with:
-          certificate: '${{ secrets.MISSING_CERTIFICATE }}'
-          folder: 'files'
-
       - name: Run the action with password
         uses: ./
         with:

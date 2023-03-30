@@ -24,6 +24,10 @@ jobs:
       - run: npm run build
         if: github.event_name == 'pull_request'
 
+      - name: Create test certificates
+        working-directory: build
+        run: ./create-test-certificates.cmd
+
       - name: Copy libraries
         shell: cmd
         run: |
@@ -35,8 +39,8 @@ jobs:
       - name: Run the action with password
         uses: ./
         with:
-          certificate: '${{ secrets.CERTIFICATE_WITH_PASSWORD }}'
-          password: '${{ secrets.CERTIFICATE_PASSWORD }}'
+          certificate: '${{ env.CERTIFICATE_WITH_PASSWORD }}'
+          password: 'secret'
           folder: 'files'
 
       - name: Copy libraries
@@ -48,7 +52,7 @@ jobs:
       - name: Run the action
         uses: ./
         with:
-          certificate: '${{ secrets.CERTIFICATE_WITHOUT_PASSWORD }}'
+          certificate: '${{ env.CERTIFICATE_WITHOUT_PASSWORD }}'
           folder: 'files'
           recursive: true
 
@@ -61,7 +65,7 @@ jobs:
       - name: Run the action
         uses: ./
         with:
-          certificate: '${{ secrets.CERTIFICATE_WITHOUT_PASSWORD }}'
+          certificate: '${{ env.CERTIFICATE_WITHOUT_PASSWORD }}'
           files: |
             files/wmi.dll
             files/TestPackage.1.0.0.nupkg

@@ -6,9 +6,9 @@ This action signs `.nupkg` files and files that are supported by `signtool.exe` 
 
 ### `certificate`
 
-**Required** The base64 encoded certificate that does not require a password.
+**Required** The base64 encoded certificate.
 
-This can done one by converting your pfx file to a base64 encoded string with the following command
+This can created by converting your pfx file to a base64 encoded string with the following command
 
 ```
 certutil -encode .\ssCertInfo.pfx .\ssCertInfo.base64.txt

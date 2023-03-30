@@ -1,4 +1,8 @@
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 name: main
 jobs:
@@ -16,6 +20,9 @@ jobs:
       - run: npm install
 
       - run: npm run lint
+
+      - run: npm run build
+        if: github.event_name == 'pull_request'
 
       - name: Copy libraries
         shell: cmd

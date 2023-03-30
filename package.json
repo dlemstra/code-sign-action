@@ -22,11 +22,11 @@
     "@actions/core": "^1.6.0"
   },
   "devDependencies": {
-    "@types/node": "^18.14.1",
-    "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0",
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
     "@vercel/ncc": "^0.36.1",
-    "eslint": "^8.34.0",
-    "typescript": "^4.9.5"
+    "eslint": "^8.37.0",
+    "typescript": "^5.0.2"
   }
 }

@@ -14,7 +14,7 @@ This can created by converting your pfx file to a base64 encoded string with the
 certutil -encode .\ssCertInfo.pfx .\ssCertInfo.base64.txt
 ```
 
-Once you run the command, you will need to ensure that only the base64 data is saved in your secret as seen here (truncated)
+Once you run the command, you will need to ensure that the data is saved in your secret as seen here
 
 ```
 -----BEGIN CERTIFICATE-----
@@ -27,8 +27,6 @@ f5ZayfFO6DeLuc9Zczf41sJR94xSLKzDpvQHpWHiNabP8srad2TEzg8XQrSOgN+Q
 vaCuBEErpQ9BjQICB9A=
 -----END CERTIFICATE-----
 ```
-
-You must remove the BEGIN CERTIFICATE and END CERTIFICATE lines before saving your secret.
 
 You may find the secrets page by navigating to `Settings > Secrets > Actions` on your current repo.
 

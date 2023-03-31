@@ -1,11 +1,11 @@
 @echo off
 
 openssl genrsa -des3 -out ca.key -passout pass:casecret 2048
-openssl req -x509 -new -nodes -key ca.key -subj "/CN=Root Certificate" -passin pass:casecret -sha256 -days 365 -out ca.pem
+openssl req -x509 -new -nodes -key ca.key -subj "/CN=Root Certificate" -passin pass:casecret -sha256 -out ca.pem
 openssl x509 -outform der -in ca.pem -out ca.crt
 certutil -addstore Root ca.crt
 
-openssl req -nodes -newkey rsa:2048 -days 365 -subj "/CN=Code Signing Certificate" -keyout sign.key -out sign.csr
+openssl req -nodes -newkey rsa:2048 -subj "/CN=Code Signing Certificate" -keyout sign.key -out sign.csr
 openssl x509 -req -CA ca.pem -CAkey ca.key -passin pass:casecret -in sign.csr -CAcreateserial -extfile v3.ext -out sign.crt
 
 openssl pkcs12 -export -passout pass: -inkey sign.key -in sign.crt -out certificate_without_password.pfx

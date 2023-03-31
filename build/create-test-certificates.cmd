@@ -6,7 +6,7 @@ openssl x509 -outform der -in ca.pem -out ca.crt
 certutil -addstore Root ca.crt
 
 openssl req -nodes -newkey rsa:2048 -days 365 -subj "/CN=Code Signing Certificate" -keyout sign.key -out sign.csr
-openssl x509 -req -CA ca.pem -CAkey ca.key -passin pass:casecret -in sign.csr -days 365 -CAcreateserial -extfile v3.ext -out sign.crt
+openssl x509 -req -CA ca.pem -CAkey ca.key -passin pass:casecret -in sign.csr -CAcreateserial -extfile v3.ext -out sign.crt
 
 openssl pkcs12 -export -passout pass: -inkey sign.key -in sign.crt -out certificate_without_password.pfx
 certutil -encode certificate_without_password.pfx certificate_without_password.txt

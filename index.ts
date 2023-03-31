@@ -160,7 +160,7 @@ async function getSigntoolLocation() {
         }
         const folderVersion = parseInt(folder.replace(/\./g,''));
         if (folderVersion > maxVersion) {
-            const signtoolFilename = `${windowsKitsfolder}${folder}/x86/signtool.exe`;
+            const signtoolFilename = `${windowsKitsfolder}${folder}/x64/signtool.exe`;
             try {
                 const stat = await fs.stat(signtoolFilename);
                 if (stat.isFile()) {

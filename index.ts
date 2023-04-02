@@ -25,7 +25,7 @@ interface IExecException
     stderr: string
 }
 
-function isExecException(err: unknown): err is IExecException  {
+function isExecException(err: unknown): err is IExecException {
     return (err as IExecException).stdout !== undefined && 
         typeof (err as IExecException).stdout === 'string' &&
         (err as IExecException).stderr !== undefined && 
@@ -38,7 +38,7 @@ function sleep(seconds: number) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 }
 
-async function createCertificatePfx() {
+async function createCertificatePfx(): Promise<string> {
     const base64Certificate = core.getInput('certificate', { required: true }).replace(/(-+)(BEGIN|END)( CERTIFICATE)(-+)/g, '');
     const certificate = Buffer.from(base64Certificate, 'base64');
     if (certificate.length == 0)
@@ -76,7 +76,7 @@ async function downloadNuGet() {
     });
 }
 
-async function signWithSigntool(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string) {
+async function signWithSigntool(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string): Promise<boolean> {
     try {
         let command = `"${signtool}" sign /f ${certificateFileName} `;
         if (certificatePassword !== '') {
@@ -96,7 +96,7 @@ async function signWithSigntool(signtool: string, certificateFileName: string, c
     }
 }
 
-async function signNupkg(certificateFileName: string, certificatePassword: string, fileName: string) {
+async function signNupkg(certificateFileName: string, certificatePassword: string, fileName: string): Promise<boolean> {
     await downloadNuGet();
 
     try {
@@ -149,7 +149,7 @@ async function* getFiles(folder: string, recursive: boolean): AsyncGenerator<str
     }
 }
 
-async function getSigntoolLocation() {
+async function getSigntoolLocation(): Promise<string> {
     const windowsKitsfolder = 'C:/Program Files (x86)/Windows Kits/10/bin/';
     const folders = await fs.readdir(windowsKitsfolder);
     let fileName = 'unable to find signtool.exe';
@@ -202,8 +202,7 @@ async function run() {
     let certificateFileName = null;
     try {
         certificateFileName = await createCertificatePfx();
-        if (certificateFileName !== null)
-            await signFiles(certificateFileName);
+        await signFiles(certificateFileName);
         await removeCertificatePfx(certificateFileName);
     }
     catch (err) {

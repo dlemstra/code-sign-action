@@ -8,7 +8,7 @@ import { exec } from 'child_process';
 import { env } from 'process';
 
 const asyncExec = util.promisify(exec);
-const nugetFileName = env['TEMP'] + '\\nuget.exe';
+const nugetFileName = `${env.RUNNER_TEMP}\\nuget.exe`;
 
 const timestampUrl = 'http://timestamp.digicert.com';
 
@@ -43,7 +43,7 @@ async function createCertificatePfx(): Promise<string> {
     const certificate = Buffer.from(base64Certificate, 'base64');
     if (certificate.length == 0)
         throw 'certificate value is not set.';
-    const certificateFileName = env['TEMP'] + `\\code-sign-certificate-${Math.floor((Math.random() * 1000000))}.pfx`
+    const certificateFileName = `${env.RUNNER_TEMP}\\code-sign-certificate-${Math.floor((Math.random() * 1000000))}.pfx`
     console.log(`Writing ${certificate.length} bytes to ${certificateFileName}.`);
     await fs.writeFile(certificateFileName, certificate);
     return certificateFileName;

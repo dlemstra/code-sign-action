@@ -46,6 +46,10 @@ You may find the secrets page by navigating to `Settings > Secrets > Actions` on
 
 **Optional** The paths to the files to sign.
 
+### `description`
+
+**Optional** The description of the signed content (same as /d for signtool).
+
 ## Example usage
 
 ```
@@ -60,4 +64,5 @@ steps:
     files: |
       file1
       file2
+    description: 'TestName'
 ```

@@ -76,9 +76,12 @@ async function downloadNuGet() {
     });
 }
 
-async function signWithSigntool(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string): Promise<boolean> {
+async function signWithSigntool(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string, description: string): Promise<boolean> {
     try {
         let command = `"${signtool}" sign /f ${certificateFileName} `;
+        if (description !== '') {
+            command += `/d "${description}" `;
+        }
         if (certificatePassword !== '') {
             command += `/p "${certificatePassword}" `
         }
@@ -117,13 +120,13 @@ async function signNupkg(certificateFileName: string, certificatePassword: strin
     }
 }
 
-async function trySignFile(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string) {
+async function trySignFile(signtool: string, certificateFileName: string, certificatePassword: string, fileName: string, description: string) {
     console.log(`Signing: ${fileName}.`);
     const extension = path.extname(fileName);
     for (let i=0; i< 10; i++) {
         await sleep(i);
         if (signtoolFileExtensions.includes(extension)) {
-            if (await signWithSigntool(signtool, certificateFileName, certificatePassword, fileName))
+            if (await signWithSigntool(signtool, certificateFileName, certificatePassword, fileName, description))
                 return;
         } else if (extension == '.nupkg') {
             if (await signNupkg(certificateFileName, certificatePassword, fileName))
@@ -181,19 +184,19 @@ async function getSigntoolLocation(): Promise<string> {
 async function signFiles(certificateFileName: string) {
     const certificatePassword = core.getInput('password');
     const signtool = await getSigntoolLocation()
-
+    const description = core.getInput('description');
     const folder = core.getInput('folder');
     if (folder !== '') {
         const recursive = core.getInput('recursive') == 'true';
         for await (const file of getFiles(folder, recursive)) {
-            await trySignFile(signtool, certificateFileName, certificatePassword, file);
+            await trySignFile(signtool, certificateFileName, certificatePassword, file, description);
         }
     } else {
         const files = core.getMultilineInput('files');
         if (files.length === 0)
             core.setFailed(`Either folder or files should be specified`);
         for (const file of files) {
-            await trySignFile(signtool, certificateFileName, certificatePassword, file);
+            await trySignFile(signtool, certificateFileName, certificatePassword, file, description);
         }
     }
 }

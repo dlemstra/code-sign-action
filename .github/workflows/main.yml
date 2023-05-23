@@ -55,6 +55,7 @@ jobs:
           certificate: '${{ env.CERTIFICATE_WITHOUT_PASSWORD }}'
           folder: 'files'
           recursive: true
+          description: 'TestName'
 
       - name: Copy libraries
         shell: cmd

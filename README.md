@@ -48,7 +48,7 @@ You may find the secrets page by navigating to `Settings > Secrets > Actions` on
 
 ### `description`
 
-**Optional** The description of the signed content (same as /d for signtool).
+**Optional** The description of the signed content, only available for signtool (same as /d for signtool).
 
 ## Example usage
 

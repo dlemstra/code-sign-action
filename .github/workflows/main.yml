@@ -70,3 +70,15 @@ jobs:
           files: |
             files/wmi.dll
             files/TestPackage.1.0.0.nupkg
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: wmi
+          path: files/wmi.dll
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: TestPackage
+          path: files/TestPackage.1.0.0.nupkg

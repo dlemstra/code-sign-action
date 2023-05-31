@@ -55,7 +55,6 @@ jobs:
           certificate: '${{ env.CERTIFICATE_WITHOUT_PASSWORD }}'
           folder: 'files'
           recursive: true
-          description: 'TestName'
 
       - name: Copy libraries
         shell: cmd
@@ -70,6 +69,7 @@ jobs:
           files: |
             files/wmi.dll
             files/TestPackage.1.0.0.nupkg
+          description: 'TestName'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

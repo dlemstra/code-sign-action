@@ -19,6 +19,9 @@ inputs:
   files:
     description: 'The paths to the files to sign.'
     required: false
+  description:
+    description: 'The description of the signed content.'
+    required: false
 runs:
   using: 'node16'
   main: 'dist/index.js'

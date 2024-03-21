@@ -72,13 +72,13 @@ jobs:
           description: 'TestName'
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: wmi
           path: files/wmi.dll
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: TestPackage
           path: files/TestPackage.1.0.0.nupkg

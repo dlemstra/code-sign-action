@@ -12,10 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use node 16
+      - name: Use node 20
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
 
       - run: npm install
 

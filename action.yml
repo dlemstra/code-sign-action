@@ -23,5 +23,5 @@ inputs:
     description: 'The description of the signed content.'
     required: false
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'

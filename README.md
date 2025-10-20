@@ -1,3 +1,7 @@
+# This repository has been archived.
+
+This repository has been archived and is now read-only. Please use the dotnet sign tool for code signing instead.
+
 # Code sign a file
 
 This action signs `.nupkg` files and files that are supported by `signtool.exe` with a code signing certificate. This action only works on Windows build agents, and that means it will only run on `windows-2019`, `windows-2022` or `windows-latest`.
